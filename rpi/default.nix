@@ -2,7 +2,7 @@
 { lib, pkgs, config, ... }:
 
 {
-  imports = [ ../sd-image ./config.nix ./i2c.nix ];
+  imports = [ ./config.nix ./i2c.nix ];
 
   options = with lib; {
     raspberry-pi-nix = {
@@ -22,11 +22,9 @@
           description = "update the firmware partition";
           wantedBy = [ "multi-user.target" ];
           serviceConfig =
-            let firmware-path = "/boot/firmware";
+            let firmware-path = "/boot";
             in {
               Type = "oneshot";
-              MountImages =
-                "/dev/disk/by-label/${config.sdImage.firmwarePartitionName}:${firmware-path}";
               StateDirectory = "raspberrypi-firmware";
               ExecStart = pkgs.writeShellScript "migrate-rpi-firmware" ''
                 shopt -s nullglob
